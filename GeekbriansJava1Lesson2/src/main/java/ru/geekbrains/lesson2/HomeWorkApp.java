@@ -2,7 +2,7 @@ package ru.geekbrains.lesson2;
 
 public class HomeWorkApp {
     public static void main(String[] args) {
-        int a = 4, b = 7, c = 9, numb = 5;
+        int a = 4, b = 7, year = 2000, numb = 5;
         String str = "Строка для повтора";
 
         // Вызов методов
@@ -15,16 +15,12 @@ public class HomeWorkApp {
 
         RepeatSout(str,numb);
 
-        System.out.println("Год: " + c + " - високосный - " + LeapYear(c));
+        System.out.println("Год: " + year + " - високосный - " + LeapYear(year));
     }
 
     // Метод №1
     public static boolean RangeSumTenTwenty(int a, int b) {
-        if ((a+b > 10) && (a+b <=20)) {
-            return true;
-        } else {
-            return false;
-        }
+        return ((a+b > 10) && (a+b <= 20));
     }
 
     // Метод №2
@@ -39,11 +35,7 @@ public class HomeWorkApp {
 
     // Метод №3
     public static boolean Negative(int a) {
-        if (a >= 0) {
-            return false;
-        } else {
-            return true;
-        }
+        return (a >= 0);
     }
 
     // Метод №4
@@ -55,11 +47,7 @@ public class HomeWorkApp {
 
     //Метод №5
     public static boolean LeapYear(int a) {
-        if (((a % 4 == 0) && (a % 100 != 0)) || (a % 400 == 0)) {
-            return true;
-        } else {
-            return false;
-        }
+        return (((a % 4 == 0) && (a % 100 != 0)) || (a % 400 == 0));
     }
 
 }
