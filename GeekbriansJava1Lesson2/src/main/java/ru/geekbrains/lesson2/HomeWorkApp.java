@@ -35,7 +35,7 @@ public class HomeWorkApp {
 
     // Метод №3
     public static boolean Negative(int a) {
-        return (a >= 0);
+        return (a < 0);
     }
 
     // Метод №4
