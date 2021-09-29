@@ -42,7 +42,7 @@ public class MainClass {
         System.out.println("Игра закончена");
     }
     public static boolean checkWin(char symb) {
-        if(map[0][0] == symb && map[0][1] == symb && map[0][2] == symb) return true;
+        /* if(map[0][0] == symb && map[0][1] == symb && map[0][2] == symb) return true;
         if(map[1][0] == symb && map[1][1] == symb && map[1][2] == symb) return true;
         if (map[2][0] == symb && map[2][1] == symb && map[2][2] == symb) return true;
         if (map[0][0] == symb && map[1][0] == symb && map[2][0] == symb) return true;
@@ -50,6 +50,32 @@ public class MainClass {
         if (map[0][2] == symb && map[1][2] == symb && map[2][2] == symb) return true;
         if (map[0][0] == symb && map[1][1] == symb && map[2][2] == symb) return true;
         if (map[2][0] == symb && map[1][1] == symb && map[0][2] == symb) return true;
+        return false; */
+
+        int checkBuferLine, checkBuferColumn, checkBuferDiagMain = 0, checkBuferDiagSide = 0;
+        // Проверка ...
+        for (int i = 0; i < 3; i++) {
+            checkBuferLine = 0;
+            checkBuferColumn = 0;
+            for (int j = 0; j < 3; j++) {
+                if (symb == map[i][j]) {
+                    checkBuferLine += 1;
+                }
+                if (symb == map[j][i]) {
+                    checkBuferColumn += 1;
+                }
+                if ((symb == map[i][j]) && (i == j)) {
+                    checkBuferDiagMain += 1;
+                }
+                if ((symb == map[i][j]) && (i + j == SIZE - 1)) {
+                    checkBuferDiagSide += 1;
+                }
+                if ((checkBuferLine == DOTS_TO_WIN) || (checkBuferColumn == DOTS_TO_WIN) ||
+                   (checkBuferDiagMain == DOTS_TO_WIN) || (checkBuferDiagSide == DOTS_TO_WIN)) {
+                    return true;
+                }
+            }
+        }
         return false;
     }
     public static boolean isMapFull() {
