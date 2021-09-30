@@ -11,6 +11,7 @@ public class MainClass {
     public static final char DOT_X = 'X';
     public static final char DOT_O = 'O';
     public static char[][] map;
+    public static char[][] mapCopy;
     public static Scanner sc = new Scanner(System.in);
     public static Random rand = new Random();
 
@@ -20,7 +21,7 @@ public class MainClass {
         while (true) {
             humanTurn();
             printMap();
-            if (checkWin(DOT_X)) {
+            if (checkWin(DOT_X,true)) {
                 System.out.println("Победил человек");
                 break;
             }
@@ -30,7 +31,7 @@ public class MainClass {
             }
             aiTurn();
             printMap();
-            if (checkWin(DOT_O)) {
+            if (checkWin(DOT_O,true)) {
                 System.out.println("Победил Искуственный Интеллект");
                 break;
             }
@@ -41,36 +42,42 @@ public class MainClass {
         }
         System.out.println("Игра закончена");
     }
-    public static boolean checkWin(char symb) {
+    public static boolean checkWin(char symb, boolean mainMapCheck) {
         int checkBuferLine, checkBuferColumn, checkBuferDiagMain = 0, checkBuferDiagSide = 0;
         int checkBuferDiagMain1 = 0, checkBuferDiagMain2 = 0, checkBuferDiagSide1 = 0, checkBuferDiagSide2 = 0;
+        char[][] currentMap;
+        if (mainMapCheck) {
+            currentMap = map;
+        } else { currentMap = mapCopy;
+
+        }
         // Проверка ...
         for (int i = 0; i < SIZE; i++) {
             checkBuferLine = 0;
             checkBuferColumn = 0;
             for (int j = 0; j < SIZE; j++) {
-                if ((symb == map[i][j]) && ((symb == map[i][j+1]) || (symb == map[i][Math.abs(j-1)]))) {
+                if ((symb == currentMap[i][j]) && ((symb == currentMap[i][j+1]) || (symb == currentMap[i][Math.abs(j-1)]))) {
                     checkBuferLine += 1;
                 } else { checkBuferLine = 0; }
-                if ((symb == map[j][i]) && ((symb == map[j+1][i]) || (symb == map[Math.abs(j-1)][i]))) {
+                if ((symb == currentMap[j][i]) && ((symb == currentMap[j+1][i]) || (symb == currentMap[Math.abs(j-1)][i]))) {
                     checkBuferColumn += 1;
                 } else { checkBuferColumn = 0; }
-                if ((symb == map[i][j]) && (i == j)) {
+                if ((symb == currentMap[i][j]) && (i == j)) {
                     checkBuferDiagMain += 1;
-                } else if (map[i][j] != symb && i == j && checkBuferDiagMain != 4) { checkBuferDiagMain = 0; }
-                if ((symb == map[i][j]) && (i + j == SIZE - 1)) {
+                } else if (currentMap[i][j] != symb && i == j && checkBuferDiagMain != 4) { checkBuferDiagMain = 0; }
+                if ((symb == currentMap[i][j]) && (i + j == SIZE - 1)) {
                     checkBuferDiagSide += 1;
-                } else if ((symb != map[i][j]) && (i + j == SIZE - 1) && (checkBuferDiagSide != 4)) { checkBuferDiagSide = 0; }
-                if ((symb == map[i][j]) && (i + j == SIZE - 2)) {
+                } else if ((symb != currentMap[i][j]) && (i + j == SIZE - 1) && (checkBuferDiagSide != 4)) { checkBuferDiagSide = 0; }
+                if ((symb == currentMap[i][j]) && (i + j == SIZE - 2)) {
                     checkBuferDiagSide1 += 1;
                 }
-                if ((symb == map[i][j]) && (i + j == SIZE)) {
+                if ((symb == currentMap[i][j]) && (i + j == SIZE)) {
                     checkBuferDiagSide2 += 1;
                 }
-                if ((symb == map[i][j]) && (j == i + 1)) {
+                if ((symb == currentMap[i][j]) && (j == i + 1)) {
                     checkBuferDiagMain1 += 1;
                 }
-                if ((symb == map[i][j]) && (i == j + 1)) {
+                if ((symb == currentMap[i][j]) && (i == j + 1)) {
                     checkBuferDiagMain2 += 1;
                 }
                 if ((checkBuferLine == DOTS_TO_WIN) || (checkBuferColumn == DOTS_TO_WIN) ||
@@ -93,6 +100,18 @@ public class MainClass {
     }
     public static void aiTurn() {
         int x, y;
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                if (map[i][j] == DOT_EMPTY) {
+                    mapCopy = map.clone();
+                    mapCopy[i][j] = DOT_X;
+                    if (checkWin(DOT_X, false)) {
+                        map[i][j] = DOT_O;
+                        return;
+                    }
+                }
+            }
+        }
         do {
             x = rand.nextInt(SIZE);
             y = rand.nextInt(SIZE);
@@ -116,6 +135,7 @@ public class MainClass {
     }
     public static void initMap() {
         map = new char[SIZE+1][SIZE+1];
+        mapCopy = new char[SIZE+1][SIZE+1];
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
                 map[i][j] = DOT_EMPTY;
