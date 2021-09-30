@@ -55,13 +55,12 @@ public class MainClass {
                 if ((symb == map[j][i]) && ((symb == map[j+1][i]) || (symb == map[Math.abs(j-1)][i]))) {
                     checkBuferColumn += 1;
                 } else { checkBuferColumn = 0; }
-                if (symb == map[i][j] && i == j && ((symb == map[i+1][j+1]) || (symb == map[Math.abs(i-1)][Math.abs(j-1)]))) {
+                if ((symb == map[i][j]) && (i == j)) {
                     checkBuferDiagMain += 1;
-                } else { checkBuferDiagMain = 0; }
-                if ((symb == map[i][j]) && (i + j == SIZE - 1) && (symb == map[i+1][Math.abs(i-1)] ||
-                   symb == map[Math.abs(i-1)][j+1])) {
+                } else if (map[i][j] != symb && i == j && checkBuferDiagMain != 4) { checkBuferDiagMain = 0; }
+                if ((symb == map[i][j]) && (i + j == SIZE - 1)) {
                     checkBuferDiagSide += 1;
-                } else { checkBuferDiagSide = 0; }
+                } else if ((symb != map[i][j]) && (i + j == SIZE - 1) && (checkBuferDiagSide != 4)) { checkBuferDiagSide = 0; }
                 if ((symb == map[i][j]) && (i + j == SIZE - 2)) {
                     checkBuferDiagSide1 += 1;
                 }
