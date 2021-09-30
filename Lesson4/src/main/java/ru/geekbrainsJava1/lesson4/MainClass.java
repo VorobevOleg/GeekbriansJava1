@@ -5,8 +5,8 @@ import java.util.Scanner;
 
 public class MainClass {
 
-    public static int SIZE = 3;
-    public static int DOTS_TO_WIN = 3;
+    public static int SIZE = 5;
+    public static int DOTS_TO_WIN = 4;
     public static final char DOT_EMPTY = '•';
     public static final char DOT_X = 'X';
     public static final char DOT_O = 'O';
@@ -42,36 +42,42 @@ public class MainClass {
         System.out.println("Игра закончена");
     }
     public static boolean checkWin(char symb) {
-        /* if(map[0][0] == symb && map[0][1] == symb && map[0][2] == symb) return true;
-        if(map[1][0] == symb && map[1][1] == symb && map[1][2] == symb) return true;
-        if (map[2][0] == symb && map[2][1] == symb && map[2][2] == symb) return true;
-        if (map[0][0] == symb && map[1][0] == symb && map[2][0] == symb) return true;
-        if (map[0][1] == symb && map[1][1] == symb && map[2][1] == symb) return true;
-        if (map[0][2] == symb && map[1][2] == symb && map[2][2] == symb) return true;
-        if (map[0][0] == symb && map[1][1] == symb && map[2][2] == symb) return true;
-        if (map[2][0] == symb && map[1][1] == symb && map[0][2] == symb) return true;
-        return false; */
-
         int checkBuferLine, checkBuferColumn, checkBuferDiagMain = 0, checkBuferDiagSide = 0;
+        int checkBuferDiagMain1 = 0, checkBuferDiagMain2 = 0, checkBuferDiagSide1 = 0, checkBuferDiagSide2 = 0;
         // Проверка ...
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < SIZE; i++) {
             checkBuferLine = 0;
             checkBuferColumn = 0;
-            for (int j = 0; j < 3; j++) {
-                if (symb == map[i][j]) {
+            for (int j = 0; j < SIZE; j++) {
+                if ((symb == map[i][j]) && ((symb == map[i][j+1]) || (symb == map[i][Math.abs(j-1)]))) {
                     checkBuferLine += 1;
-                }
-                if (symb == map[j][i]) {
+                } else { checkBuferLine = 0; }
+                if ((symb == map[j][i]) && ((symb == map[j+1][i]) || (symb == map[Math.abs(j-1)][i]))) {
                     checkBuferColumn += 1;
-                }
-                if ((symb == map[i][j]) && (i == j)) {
+                } else { checkBuferColumn = 0; }
+                if (symb == map[i][j] && i == j && ((symb == map[i+1][j+1]) || (symb == map[Math.abs(i-1)][Math.abs(j-1)]))) {
                     checkBuferDiagMain += 1;
-                }
-                if ((symb == map[i][j]) && (i + j == SIZE - 1)) {
+                } else { checkBuferDiagMain = 0; }
+                if ((symb == map[i][j]) && (i + j == SIZE - 1) && (symb == map[i+1][Math.abs(i-1)] ||
+                   symb == map[Math.abs(i-1)][j+1])) {
                     checkBuferDiagSide += 1;
+                } else { checkBuferDiagSide = 0; }
+                if ((symb == map[i][j]) && (i + j == SIZE - 2)) {
+                    checkBuferDiagSide1 += 1;
+                }
+                if ((symb == map[i][j]) && (i + j == SIZE)) {
+                    checkBuferDiagSide2 += 1;
+                }
+                if ((symb == map[i][j]) && (j == i + 1)) {
+                    checkBuferDiagMain1 += 1;
+                }
+                if ((symb == map[i][j]) && (i == j + 1)) {
+                    checkBuferDiagMain2 += 1;
                 }
                 if ((checkBuferLine == DOTS_TO_WIN) || (checkBuferColumn == DOTS_TO_WIN) ||
-                   (checkBuferDiagMain == DOTS_TO_WIN) || (checkBuferDiagSide == DOTS_TO_WIN)) {
+                   (checkBuferDiagMain == DOTS_TO_WIN) || (checkBuferDiagSide == DOTS_TO_WIN) ||
+                   (checkBuferDiagSide1 == DOTS_TO_WIN) || (checkBuferDiagSide2 == DOTS_TO_WIN) ||
+                   (checkBuferDiagMain1 == DOTS_TO_WIN) || (checkBuferDiagMain2 == DOTS_TO_WIN)) {
                     return true;
                 }
             }
@@ -110,7 +116,7 @@ public class MainClass {
         return false;
     }
     public static void initMap() {
-        map = new char[SIZE][SIZE];
+        map = new char[SIZE+1][SIZE+1];
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
                 map[i][j] = DOT_EMPTY;
