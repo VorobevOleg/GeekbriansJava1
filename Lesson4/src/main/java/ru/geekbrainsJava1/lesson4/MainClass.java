@@ -2,6 +2,7 @@ package ru.geekbrainsJava1.lesson4;
 
 import java.util.Random;
 import java.util.Scanner;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class MainClass {
 
@@ -42,6 +43,7 @@ public class MainClass {
         }
         System.out.println("Игра закончена");
     }
+
     public static boolean checkWin(char symb, boolean mainMapCheck) {
         int checkBuferLine, checkBuferColumn, checkBuferDiagMain = 0, checkBuferDiagSide = 0;
         int checkBuferDiagMain1 = 0, checkBuferDiagMain2 = 0, checkBuferDiagSide1 = 0, checkBuferDiagSide2 = 0;
@@ -51,7 +53,6 @@ public class MainClass {
             currentMap = map;
         } else { currentMap = mapCopy;
         }
-
         // Проверка ...
         for (int i = 0; i < SIZE; i++) {
             checkBuferLine = 0;
@@ -91,6 +92,49 @@ public class MainClass {
         }
         return false;
     }
+    // Метод проверки на 3 подряд
+    public static boolean checkWin2X(char symb) {
+        int checkBuferLine, checkBuferColumn, checkBuferDiagMain = 0, checkBuferDiagSide = 0;
+        int checkBuferDiagMain1 = 0, checkBuferDiagMain2 = 0, checkBuferDiagSide1 = 0, checkBuferDiagSide2 = 0;
+        // Проверка ...
+        for (int i = 0; i < SIZE; i++) {
+            checkBuferLine = 0;
+            checkBuferColumn = 0;
+            for (int j = 0; j < SIZE; j++) {
+                if ((symb == mapCopy[i][j]) && ((symb == mapCopy[i][j+1]) || (symb == mapCopy[i][Math.abs(j-1)]))) {
+                    checkBuferLine += 1;
+                } else { checkBuferLine = 0; }
+                if ((symb == mapCopy[j][i]) && ((symb == mapCopy[j+1][i]) || (symb == mapCopy[Math.abs(j-1)][i]))) {
+                    checkBuferColumn += 1;
+                } else { checkBuferColumn = 0; }
+                if ((symb == mapCopy[i][j]) && (i == j)) {
+                    checkBuferDiagMain += 1;
+                } else if (mapCopy[i][j] != symb && i == j && checkBuferDiagMain != 3) { checkBuferDiagMain = 0; }
+                if ((symb == mapCopy[i][j]) && (i + j == SIZE - 1)) {
+                    checkBuferDiagSide += 1;
+                } else if ((symb != mapCopy[i][j]) && (i + j == SIZE - 1) && (checkBuferDiagSide != 3)) { checkBuferDiagSide = 0; }
+                if ((symb == mapCopy[i][j]) && (i + j == SIZE - 2)) {
+                    checkBuferDiagSide1 += 1;
+                }
+                if ((symb == mapCopy[i][j]) && (i + j == SIZE)) {
+                    checkBuferDiagSide2 += 1;
+                }
+                if ((symb == mapCopy[i][j]) && (j == i + 1)) {
+                    checkBuferDiagMain1 += 1;
+                }
+                if ((symb == mapCopy[i][j]) && (i == j + 1)) {
+                    checkBuferDiagMain2 += 1;
+                }
+                if ((checkBuferLine == DOTS_TO_WIN-1) || (checkBuferColumn == DOTS_TO_WIN-1) ||
+                        (checkBuferDiagMain == DOTS_TO_WIN-1) || (checkBuferDiagSide == DOTS_TO_WIN-1) ||
+                        (checkBuferDiagSide1 == DOTS_TO_WIN-1) || (checkBuferDiagSide2 == DOTS_TO_WIN-1) ||
+                        (checkBuferDiagMain1 == DOTS_TO_WIN-1) || (checkBuferDiagMain2 == DOTS_TO_WIN-1)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
     public static boolean isMapFull() {
         for (int i = 0; i < SIZE; i++) {
@@ -103,7 +147,7 @@ public class MainClass {
 
     public static void aiTurn() {
         int x, y;
-        // Блокировка ходов человека
+        // Блокировка ходов человека, где 3 "Х" подряд
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
                 if (map[i][j] == DOT_EMPTY) {
@@ -114,6 +158,24 @@ public class MainClass {
                     }
                     mapCopy[i][j] = DOT_X;
                     if (checkWin(DOT_X, false)) {
+                        map[i][j] = DOT_O;
+                        System.out.println("Компьютер походил в точку " + (i + 1) + " " + (j + 1));
+                        return;
+                    }
+                }
+            }
+        }
+        // Блокировка ходов человека, где 2 "Х" подряд
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                if (map[i][j] == DOT_EMPTY) {
+                    for (int m = 0; m <= SIZE; m++) {
+                        for (int n = 0; n <= SIZE; n++) {
+                            mapCopy[m][n] = map[m][n];
+                        }
+                    }
+                    mapCopy[i][j] = DOT_X;
+                    if (checkWin2X(DOT_X)) {
                         map[i][j] = DOT_O;
                         System.out.println("Компьютер походил в точку " + (i + 1) + " " + (j + 1));
                         return;
