@@ -46,11 +46,12 @@ public class MainClass {
         int checkBuferLine, checkBuferColumn, checkBuferDiagMain = 0, checkBuferDiagSide = 0;
         int checkBuferDiagMain1 = 0, checkBuferDiagMain2 = 0, checkBuferDiagSide1 = 0, checkBuferDiagSide2 = 0;
         char[][] currentMap;
+        // Если true, то проверяем на победу основной массив, иначе - проверяем копию основного массива для хода компьютера
         if (mainMapCheck) {
             currentMap = map;
         } else { currentMap = mapCopy;
-
         }
+
         // Проверка ...
         for (int i = 0; i < SIZE; i++) {
             checkBuferLine = 0;
@@ -90,6 +91,7 @@ public class MainClass {
         }
         return false;
     }
+
     public static boolean isMapFull() {
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
@@ -98,20 +100,28 @@ public class MainClass {
         }
         return true;
     }
+
     public static void aiTurn() {
         int x, y;
+        // Блокировка ходов человека
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
                 if (map[i][j] == DOT_EMPTY) {
-                    mapCopy = map.clone();
+                    for (int m = 0; m <= SIZE; m++) {
+                        for (int n = 0; n <= SIZE; n++) {
+                            mapCopy[m][n] = map[m][n];
+                        }
+                    }
                     mapCopy[i][j] = DOT_X;
                     if (checkWin(DOT_X, false)) {
                         map[i][j] = DOT_O;
+                        System.out.println("Компьютер походил в точку " + (i + 1) + " " + (j + 1));
                         return;
                     }
                 }
             }
         }
+        // Если блокировать не нужно, то просто ход в свободное рандомное место
         do {
             x = rand.nextInt(SIZE);
             y = rand.nextInt(SIZE);
@@ -119,6 +129,7 @@ public class MainClass {
         System.out.println("Компьютер походил в точку " + (x + 1) + " " + (y + 1));
         map[y][x] = DOT_O;
     }
+
     public static void humanTurn() {
         int x, y;
         do {
@@ -128,11 +139,13 @@ public class MainClass {
         } while (!isCellValid(x, y)); // while(isCellValid(x, y) == false)
         map[y][x] = DOT_X;
     }
+
     public static boolean isCellValid(int x, int y) {
         if (x < 0 || x >= SIZE || y < 0 || y >= SIZE) return false;
         if (map[y][x] == DOT_EMPTY) return true;
         return false;
     }
+
     public static void initMap() {
         map = new char[SIZE+1][SIZE+1];
         mapCopy = new char[SIZE+1][SIZE+1];
@@ -142,6 +155,7 @@ public class MainClass {
             }
         }
     }
+
     public static void printMap() {
         for (int i = 0; i <= SIZE; i++) {
             System.out.print(i + " ");
