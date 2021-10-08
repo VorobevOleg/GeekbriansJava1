@@ -17,6 +17,7 @@ public class Dog extends Animal {
         countDog += 1;
     }
 
+    @Override
     public void run (int distance) {
         if (distance > 0 && distance <= 500) {
             System.out.println(getName() + " пробежал " + distance + " м.");
@@ -27,6 +28,7 @@ public class Dog extends Animal {
         } else System.out.println(getName() + " не сдвинулся с места");
     }
 
+    @Override
     public void swim (int distance) {
         if (distance > 0 && distance <= 10) {
             System.out.println(getName() + " проплыл " + distance + " м.");
